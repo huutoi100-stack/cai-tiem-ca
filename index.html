@@ -68,9 +68,10 @@ button{font:inherit;color:inherit}
   border:1px solid rgba(255,255,255,.85);
   box-shadow:0 22px 50px rgba(30,70,120,.22),inset 0 1px 0 #fff;
   transition:transform .2s ease-out,opacity .16s ease}
-.card.front{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.card.front{background:linear-gradient(145deg,#f0f8f1,#eaf2e8 50%,#e5eee3);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .card.front:not(.promo){overflow:visible}
-.card:not(.front){background:#eaf6e3b8}
+.card:not(.front){background:#eaf6e3b8;filter:blur(.65px)}
 .top,.sec-row{border-radius:18px;background:linear-gradient(125deg,#ffffffba,#f6f8ef78);padding:10px 12px;border:1px solid #fff9}
 .sec-row{margin-top:0;padding:7px 12px}
 
@@ -98,7 +99,7 @@ button{font:inherit;color:inherit}
   background:radial-gradient(ellipse,#1f3f6630,transparent 70%)}
 .hero .cut{position:absolute;width:83%;height:85%;object-fit:contain;pointer-events:none;
   filter:drop-shadow(0 14px 14px rgba(31,63,102,.28))}
-.front .hero .cut{left:-5%;width:122%;height:89%;filter:drop-shadow(0 16px 12px #1f3f6659)}
+.front .hero .cut{left:-1%;width:102%;height:89%;filter:drop-shadow(0 16px 12px #1f3f6659)}
 .cut[data-src]:not([src]){visibility:hidden}
 .cut[data-face="left"]{scale:-1 1}
 .front img.is-swimming{opacity:0;transition:none}
@@ -242,9 +243,10 @@ html,body{overflow:hidden;touch-action:pan-y;-webkit-text-size-adjust:100%;text-
   margin:0;padding:16px 16px 12px;overflow:hidden;border:0;border-radius:0;
   background:none;box-shadow:none;container-type:inline-size;
   transform:translate(-50%,-50%) scale(var(--menu-scale,1));transform-origin:center}
-.deck{min-height:0;
-  -webkit-mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent);
-  mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent)}
+.deck{min-height:0;margin-inline:-16px;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent);
+  mask-image:linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent)}
+.deck .card,.deck.is-combo .card{left:40px;width:calc(100% - 80px)}
 .app button{touch-action:manipulation}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -774,12 +776,12 @@ function relativeCard(j, selected, count){
 }
 
 function layout(dx=0){
-  const spacing=(deck.clientWidth-48)*.88;
+  const spacing=(cards[0]?.offsetWidth || deck.clientWidth-80)*.88;
   cards.forEach((c,j)=>{
     const k=relativeCard(j,idx,cards.length);
     const visible=Math.abs(k)<=1;
     const shift=k===0 ? dx : k*spacing+dx*.2;
-    c.style.transform=`translateX(${shift}px) scale(${k===0 ? 1 : .84})`;
+    c.style.transform=`translateX(${shift}px) scale(${k===0 ? "1" : ".9,.97"})`;
     c.style.opacity=visible ? (k===0 ? "1" : ".82") : "0";
     c.style.visibility=visible ? "visible" : "hidden";
     c.style.zIndex=k===0 ? "3" : "1";
