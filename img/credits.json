@@ -1,0 +1,74 @@
+{
+ "diec": {
+  "file": "diec.jpg",
+  "artist": "",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Male_Cherry_Barb_700.jpg"
+ },
+ "tram": {
+  "file": "tram.jpg",
+  "artist": "Cisamarc",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Danio_Margaritatus_malle_(zoom).jpg"
+ },
+ "tamgiac": {
+  "file": "tamgiac.jpg",
+  "artist": "Roel Balingit",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Harlequin_rasboras_03.jpg"
+ },
+ "neonhd": {
+  "file": "neonhd.jpg",
+  "artist": "Citron",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Emperor_tetra.jpg"
+ },
+ "neonkc": {
+  "file": "neonkc.jpg",
+  "artist": "Holger Krisp",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Neonsalmler_Paracheirodon_innesi.jpg"
+ },
+ "hongmi": {
+  "file": "hongmi.jpg",
+  "artist": "Mattia Nocciola",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Dawkinsia_denisonii_specimen_Natural_History_Museum_University_of_Pisa_(cropped).jpg"
+ },
+ "pigmy": {
+  "file": "pigmy.jpg",
+  "artist": "Carnat Joel",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Corydoras_pygmaeus_carnat_joel_5.jpg"
+ },
+ "muoitieu": {
+  "file": "muoitieu.jpg",
+  "artist": "Mattia Nocciola",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Hoplisoma_paleatum_Natural_History_Museum_University_of_Pisa.jpg"
+ },
+ "chachngua": {
+  "file": "chachngua.jpg",
+  "artist": "Drachenschwertträger36",
+  "license": "CC BY-SA 2.0 de",
+  "source": "https://commons.wikimedia.org/wiki/File:Acantopsis_dialuzona.jpg"
+ },
+ "meomt": {
+  "file": "meomt.jpg",
+  "artist": "Claire H.",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pimelodus_pictus.jpg"
+ },
+ "yamato": {
+  "file": "yamato.jpeg",
+  "artist": "Stefanie Leuker",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Amano_Garnele_(85281493).jpeg"
+ },
+ "firered": {
+  "file": "firered.jpg",
+  "artist": "TheJammingYam (talk)",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Red_Cherry_Shrimp_1.jpg"
+ }
+}
