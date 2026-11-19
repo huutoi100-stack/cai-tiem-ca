@@ -25,7 +25,7 @@ button{font:inherit;color:inherit}
 .tank::before{content:"";position:absolute;inset:-28px;
   background:linear-gradient(180deg,#f3f8ed70,#e6f1de50 48%,#d5e4d63d),
     url("img/aquascape-background.jpg") 43% center/cover no-repeat;
-  filter:blur(18px)}
+  filter:blur(6px)}
 .ray{position:absolute;top:-20vh;width:90px;height:130vh;opacity:.42;transform:rotate(17deg);
   background:radial-gradient(ellipse at 50% 12%,#fff,transparent 70%);transform-origin:top center}
 .bubble{position:absolute;bottom:-30px;border-radius:50%;
@@ -71,7 +71,7 @@ button{font:inherit;color:inherit}
 .card.front{background:linear-gradient(145deg,#f0f8f1,#eaf2e8 50%,#e5eee3);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .card.front:not(.promo){overflow:visible}
-.card:not(.front){background:#eaf6e3b8;filter:blur(.65px)}
+.card:not(.front){background:#eaf6e3b8;filter:blur(.45px)}
 .top,.sec-row{border-radius:18px;background:linear-gradient(125deg,#ffffffba,#f6f8ef78);padding:10px 12px;border:1px solid #fff9}
 .sec-row{margin-top:0;padding:7px 12px}
 
@@ -244,8 +244,8 @@ html,body{overflow:hidden;touch-action:pan-y;-webkit-text-size-adjust:100%;text-
   background:none;box-shadow:none;container-type:inline-size;
   transform:translate(-50%,-50%) scale(var(--menu-scale,1));transform-origin:center}
 .deck{min-height:0;margin-inline:-16px;
-  -webkit-mask-image:linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent);
-  mask-image:linear-gradient(to right,transparent,#000 30px,#000 calc(100% - 30px),transparent)}
+  -webkit-mask-image:linear-gradient(to right,transparent,#0006 8px,#000c 18px,#000 36px,#000 calc(100% - 36px),#000c calc(100% - 18px),#0006 calc(100% - 8px),transparent);
+  mask-image:linear-gradient(to right,transparent,#0006 8px,#000c 18px,#000 36px,#000 calc(100% - 36px),#000c calc(100% - 18px),#0006 calc(100% - 8px),transparent)}
 .deck .card,.deck.is-combo .card{left:40px;width:calc(100% - 80px)}
 .app button{touch-action:manipulation}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -776,12 +776,12 @@ function relativeCard(j, selected, count){
 }
 
 function layout(dx=0){
-  const spacing=(cards[0]?.offsetWidth || deck.clientWidth-80)*.88;
+  const spacing=(cards[0]?.offsetWidth || deck.clientWidth-80)*.82;
   cards.forEach((c,j)=>{
     const k=relativeCard(j,idx,cards.length);
     const visible=Math.abs(k)<=1;
     const shift=k===0 ? dx : k*spacing+dx*.2;
-    c.style.transform=`translateX(${shift}px) scale(${k===0 ? "1" : ".9,.97"})`;
+    c.style.transform=`translateX(${shift}px) scale(${k===0 ? "1" : ".84"})`;
     c.style.opacity=visible ? (k===0 ? "1" : ".82") : "0";
     c.style.visibility=visible ? "visible" : "hidden";
     c.style.zIndex=k===0 ? "3" : "1";
