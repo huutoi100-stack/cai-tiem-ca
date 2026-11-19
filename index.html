@@ -50,15 +50,15 @@ button{font:inherit;color:inherit}
 .hand{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--deep)}
 
 /* đầu trang */
-.top{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px 10px}
-.top>div:first-child{display:contents}
-.brand{grid-column:1/-1;display:flex;align-items:baseline;gap:7px}
-.hours{font:500 11px/1.2 'Be Vietnam Pro',system-ui,sans-serif;letter-spacing:0;white-space:nowrap;color:var(--ink2)}
-.brand{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(22px,6.5cqw,30px);line-height:1.05;margin:0;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(255,255,255,.8)}
-.sub{margin:0;font-size:10.5px;color:var(--ink2);white-space:nowrap}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.top>div:first-child{min-width:0}
+.brand{display:flex;align-items:baseline;gap:5px;white-space:nowrap}
+.hours{font:500 10px/1.2 'Be Vietnam Pro',system-ui,sans-serif;letter-spacing:0;white-space:nowrap;color:var(--ink2)}
+.brand{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(22px,5.7cqw,25px);line-height:1.05;margin:0;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(255,255,255,.8)}
+.sub{margin:2px 0 0;font-size:10.5px;color:var(--ink2);white-space:nowrap}
 .image-credit{position:fixed;right:8px;bottom:2px;z-index:2;border:0;border-radius:5px;background:#f6fff1d9;padding:1px 5px;color:var(--deep);text-decoration:underline;cursor:pointer;font-size:10px}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:600;color:var(--deep);white-space:nowrap}
-.pill i{width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.18)}
+.pill{display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:6px;padding:5px 7px;border-radius:999px;font-size:10px;font-weight:600;color:var(--deep);white-space:nowrap}
+.pill i{width:6px;height:6px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.18)}
 .pill[data-state="closing"] i{background:#ef9b21;box-shadow:0 0 0 4px #ef9b212b}
 .pill[data-state="closed"] i{background:#e34e51;box-shadow:0 0 0 4px #e34e512b}
 .sec-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:2px}
@@ -69,12 +69,12 @@ button{font:inherit;color:inherit}
 .deck{position:relative;flex:1;min-height:400px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .card{position:absolute;top:0;bottom:0;left:24px;width:calc(100% - 48px);border-radius:34px;overflow:hidden;
   display:flex;flex-direction:column;cursor:grab;color:var(--ink);
-  background:linear-gradient(145deg,#ffffffbd,#f3faef85 50%,#eaf4e966);
+  background:linear-gradient(145deg,#f0f8f1,#eaf2e8 50%,#e5eee3);isolation:isolate;
   border:1px solid rgba(255,255,255,.85);
   box-shadow:0 22px 50px rgba(30,70,120,.22),inset 0 1px 0 #fff;
   transition:transform .2s ease-out,opacity .16s ease}
 .card.front{background:linear-gradient(145deg,#f0f8f1,#eaf2e8 50%,#e5eee3);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  opacity:1!important;backdrop-filter:none;-webkit-backdrop-filter:none}
 .card.front:not(.promo){overflow:visible}
 .card:not(.front){background:#eaf6e3b8;filter:blur(.45px)}
 .top,.sec-row{border-radius:18px;background:linear-gradient(125deg,#ffffffba,#f6f8ef78);padding:10px 12px;border:1px solid #fff9}
@@ -420,7 +420,7 @@ const COMBOS = [
    items:[["bobita",2],["muoitieu",2],["green",2],["pigmy",2],["vene",2]]},
   {ten:"Combo 5 Chuột", price:185, benefit:"Tầng đáy thêm sinh động", detail:"Năm dáng cá chuột cùng lục tìm vụn thức ăn trên nền cát.", sl:"5 con",
    items:[["bobita",1],["muoitieu",1],["green",1],["pigmy",1],["vene",1]]},
-  {ten:"Combo 10 Tầng Đáy", price:360, grid:true, benefit:"Đa dạng tầng đáy", detail:"Kết hợp cá rà nền, cá thích vùi cát và cá gặm rêu trên đá.", sl:"10 con",
+  {ten:"Combo 10 Tầng Đáy", price:365, grid:true, benefit:"Đa dạng tầng đáy", detail:"Kết hợp cá rà nền, cá thích vùi cát và cá gặm rêu trên đá.", sl:"10 con",
    items:[["bobita",1],["green",1],["vene",1],["muoitieu",1],["pigmy",1],["chachngua",1],["kuli",1],["meomt",1],["meobb",1],["panda",1]]},
   {ten:"Combo 20 Tầng Giữa", price:455, benefit:"Bể rực màu", detail:"Bốn dòng cá tạo mảng màu và chuyển động ở tầng giữa.", sl:"20 con",
    items:[["diecngan",5],["tram",5],["tamgiac",5],["neonkc",5]]},
