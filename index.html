@@ -242,7 +242,9 @@ html,body{overflow:hidden;touch-action:pan-y;-webkit-text-size-adjust:100%;text-
   margin:0;padding:16px 16px 12px;overflow:hidden;border:0;border-radius:0;
   background:none;box-shadow:none;container-type:inline-size;
   transform:translate(-50%,-50%) scale(var(--menu-scale,1));transform-origin:center}
-.deck{min-height:0}
+.deck{min-height:0;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent);
+  mask-image:linear-gradient(to right,transparent,#000 18px,#000 calc(100% - 18px),transparent)}
 .app button{touch-action:manipulation}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
