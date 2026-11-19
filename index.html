@@ -50,12 +50,17 @@ button{font:inherit;color:inherit}
 .hand{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--deep)}
 
 /* đầu trang */
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.top{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px 10px}
+.top>div:first-child{display:contents}
+.brand{grid-column:1/-1;display:flex;align-items:baseline;gap:7px}
+.hours{font:500 11px/1.2 'Be Vietnam Pro',system-ui,sans-serif;letter-spacing:0;white-space:nowrap;color:var(--ink2)}
 .brand{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(22px,6.5cqw,30px);line-height:1.05;margin:0;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(255,255,255,.8)}
-.sub{margin:3px 0 0;font-size:13px;color:var(--ink2)}
+.sub{margin:0;font-size:10.5px;color:var(--ink2);white-space:nowrap}
 .image-credit{position:fixed;right:8px;bottom:2px;z-index:2;border:0;border-radius:5px;background:#f6fff1d9;padding:1px 5px;color:var(--deep);text-decoration:underline;cursor:pointer;font-size:10px}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--deep);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:600;color:var(--deep);white-space:nowrap}
 .pill i{width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.18)}
+.pill[data-state="closing"] i{background:#ef9b21;box-shadow:0 0 0 4px #ef9b212b}
+.pill[data-state="closed"] i{background:#e34e51;box-shadow:0 0 0 4px #e34e512b}
 .sec-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:2px}
 .sec-row h2{white-space:nowrap;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(14px,4.2cqw,18px);margin:0}
 .sec-row .hand{white-space:nowrap;font-size:10px;font-weight:600}
@@ -244,8 +249,8 @@ html,body{overflow:hidden;touch-action:pan-y;-webkit-text-size-adjust:100%;text-
   background:none;box-shadow:none;container-type:inline-size;
   transform:translate(-50%,-50%) scale(var(--menu-scale,1));transform-origin:center}
 .deck{min-height:0;margin-inline:-16px;
-  -webkit-mask-image:linear-gradient(to right,transparent,#0006 8px,#000c 18px,#000 36px,#000 calc(100% - 36px),#000c calc(100% - 18px),#0006 calc(100% - 8px),transparent);
-  mask-image:linear-gradient(to right,transparent,#0006 8px,#000c 18px,#000 36px,#000 calc(100% - 36px),#000c calc(100% - 18px),#0006 calc(100% - 8px),transparent)}
+  --edge-fade:linear-gradient(to right,transparent,#0000000a 4px,#00000029 10px,#00000059 16px,#00000099 23px,#000000d1 30px,#000 36px,#000 calc(100% - 36px),#000000d1 calc(100% - 30px),#00000099 calc(100% - 23px),#00000059 calc(100% - 16px),#00000029 calc(100% - 10px),#0000000a calc(100% - 4px),transparent);
+  -webkit-mask-image:var(--edge-fade);mask-image:var(--edge-fade)}
 .deck .card,.deck.is-combo .card{left:40px;width:calc(100% - 80px)}
 .app button{touch-action:manipulation}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -262,10 +267,10 @@ html,body{overflow:hidden;touch-action:pan-y;-webkit-text-size-adjust:100%;text-
 <main class="app">
   <header class="top">
     <div>
-      <h1 class="brand">CÁI TIỆM CÁ</h1>
+      <h1 class="brand">CÁI TIỆM CÁ <small class="hours">(6:00 - 22:00)</small></h1>
       <p class="sub">CÁ CẢNH · THỦY SINH · TÉP · CUA</p>
     </div>
-    <div class="pill glass"><i></i>Đang mở cửa</div>
+    <div class="pill glass" id="shopStatus" role="status"><i aria-hidden="true"></i><span></span></div>
   </header>
 
   <div class="sec-row"><h2 id="secTitle"></h2><span class="hand">vuốt để xem →</span></div>
@@ -893,6 +898,25 @@ document.getElementById("creditBtn").onclick=()=>document.getElementById("credit
 
 show("combo");
 fitMenu();
+
+const shopClock=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+function shopState(date=new Date()){
+  const parts=Object.fromEntries(shopClock.formatToParts(date).map(p=>[p.type,p.value]));
+  const minutes=Number(parts.hour)*60+Number(parts.minute);
+  if(minutes<360 || minutes>=1320) return {state:"closed",label:"Đóng cửa"};
+  if(minutes>=1290) return {state:"closing",label:"Sắp đóng cửa"};
+  return {state:"open",label:"Đang mở cửa"};
+}
+let shopTimer;
+function updateShopStatus(){
+  clearTimeout(shopTimer);
+  const status=shopState(), badge=document.getElementById("shopStatus");
+  badge.dataset.state=status.state;
+  badge.querySelector("span").textContent=status.label;
+  shopTimer=setTimeout(updateShopStatus,60000-Date.now()%60000);
+}
+updateShopStatus();
+document.addEventListener("visibilitychange",updateShopStatus);
 
 /* bong bóng */
 const tank=document.querySelector(".tank");
