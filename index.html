@@ -14,7 +14,7 @@
   --edge:rgba(255,255,255,.8);
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{margin:0;height:100%;overflow-x:hidden}
 body{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);background:#cbd7c5;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit}
@@ -36,6 +36,7 @@ button{font:inherit;color:inherit}
 .app{position:relative;z-index:1;max-width:440px;margin:0 auto;height:100dvh;min-height:620px;
   display:flex;flex-direction:column;gap:12px;
   padding:max(16px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom))}
+@media (max-width:519px){.app{overflow:hidden}}
 @media (min-width:520px){
   .app{margin:24px auto;height:calc(100dvh - 48px);border-radius:44px;border:1px solid var(--edge);
     background:linear-gradient(160deg,rgba(255,255,255,.28),rgba(255,255,255,.06));
@@ -398,7 +399,7 @@ const ITEMS = [
 const COMBOS = [
   {ten:"Combo 10 Chuột", price:285, benefit:"Siêu dọn thức ăn thừa", detail:"Đàn 10 cá chuột chịu khó rà nền, nhặt vụn thức ăn rơi xuống đáy.", sl:"10 con",
    items:[["bobita",2],["muoitieu",2],["green",2],["pigmy",2],["vene",2]]},
-  {ten:"Combo 5 Chuột", price:150, benefit:"Tầng đáy thêm sinh động", detail:"Năm dáng cá chuột cùng lục tìm vụn thức ăn trên nền cát.", sl:"5 con",
+  {ten:"Combo 5 Chuột", price:185, benefit:"Tầng đáy thêm sinh động", detail:"Năm dáng cá chuột cùng lục tìm vụn thức ăn trên nền cát.", sl:"5 con",
    items:[["bobita",1],["muoitieu",1],["green",1],["pigmy",1],["vene",1]]},
   {ten:"Combo 10 Tầng Đáy", price:360, grid:true, benefit:"Đa dạng tầng đáy", detail:"Kết hợp cá rà nền, cá thích vùi cát và cá gặm rêu trên đá.", sl:"10 con",
    items:[["bobita",1],["green",1],["vene",1],["muoitieu",1],["pigmy",1],["chachngua",1],["kuli",1],["meomt",1],["meobb",1],["panda",1]]},
@@ -812,7 +813,10 @@ const end=()=>{
   if(sx===null) return; sx=null; cards[idx].classList.remove("dragging");
   if(dx<-60) go(idx+1); else if(dx>60) go(idx-1); else layout();
 };
-deck.addEventListener("pointerup",end); deck.addEventListener("pointercancel",end);
+deck.addEventListener("pointerup",end);
+deck.addEventListener("pointercancel",()=>{
+  sx=null; dx=0; cards[idx]?.classList.remove("dragging"); layout();
+});
 // bấm vào thẻ đang ló phía sau để xem tiếp
 deck.addEventListener("click",e=>{
   if(Math.abs(dx)>=5 || !cards[idx]) return;
