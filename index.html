@@ -38,6 +38,7 @@ button{font:inherit;color:inherit}
   display:flex;flex-direction:column;gap:12px;
   padding:max(16px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom))}
 @media (max-width:519px){.app{overflow:hidden}}
+@media (max-width:519px) and (max-height:740px){.app{min-height:740px}}
 @media (min-width:520px){
   .app{margin:24px auto;height:calc(100dvh - 48px);border-radius:44px;border:1px solid var(--edge);
     background:linear-gradient(160deg,rgba(255,255,255,.28),rgba(255,255,255,.06));
