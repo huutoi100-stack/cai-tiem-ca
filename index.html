@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CÁI TIỆM CÁ · Menu cá cảnh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#163d36; --ink2:#47665c; --deep:#286c58; --dark:#194d3e;
+  --glass:linear-gradient(140deg,#ffffff94,#ffffff38);
+  --edge:rgba(255,255,255,.8);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);background:#cbd7c5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+
+/* ---------- bể kính phía sau ---------- */
+.tank{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#c4d6bd}
+.tank::before{content:"";position:absolute;inset:-28px;
+  background:linear-gradient(180deg,#f3f8ed70,#e6f1de50 48%,#d5e4d63d),
+    url("img/aquascape-background.jpg") 43% center/cover no-repeat;
+  filter:blur(18px)}
+.ray{position:absolute;top:-20vh;width:90px;height:130vh;opacity:.42;transform:rotate(17deg);
+  background:radial-gradient(ellipse at 50% 12%,#fff,transparent 70%);transform-origin:top center}
+.bubble{position:absolute;bottom:-30px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#fff 0 18%,rgba(255,255,255,.35) 40%,rgba(255,255,255,.08) 70%);
+  border:1px solid rgba(255,255,255,.7);animation:rise linear infinite}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}10%{opacity:.9}50%{transform:translate(12px,-55vh)}100%{transform:translate(-8px,-115vh);opacity:0}}
+
+/* ---------- khung 1 màn hình ---------- */
+.app{position:relative;z-index:1;max-width:440px;margin:0 auto;height:100dvh;min-height:620px;
+  display:flex;flex-direction:column;gap:12px;
+  padding:max(16px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom))}
+@media (min-width:520px){
+  .app{margin:24px auto;height:calc(100dvh - 48px);border-radius:44px;border:1px solid var(--edge);
+    background:linear-gradient(160deg,rgba(255,255,255,.28),rgba(255,255,255,.06));
+    box-shadow:0 30px 80px rgba(30,70,120,.18),inset 0 1px 0 #fff;padding:22px 20px 16px}
+}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  border:1px solid var(--edge);
+  box-shadow:0 10px 28px rgba(30,70,120,.12),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.35)}
+.hand{font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--deep)}
+
+/* đầu trang */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.brand{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(22px,6.5vw,30px);line-height:1.05;margin:0;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(255,255,255,.8)}
+.sub{margin:3px 0 0;font-size:13px;color:var(--ink2)}
+.image-credit{position:fixed;right:8px;bottom:2px;z-index:2;border:0;border-radius:5px;background:#f6fff1d9;padding:1px 5px;color:var(--deep);text-decoration:underline;cursor:pointer;font-size:10px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--deep);white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.18)}
+.sec-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:2px}
+.sec-row h2{white-space:nowrap;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(14px,4.2vw,18px);margin:0}
+.sec-row .hand{white-space:nowrap;font-size:10px;font-weight:600}
+
+/* ---------- xấp thẻ ---------- */
+.deck{position:relative;flex:1;min-height:400px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.card{position:absolute;top:0;bottom:0;left:24px;width:calc(100% - 48px);border-radius:34px;overflow:hidden;
+  display:flex;flex-direction:column;cursor:grab;color:var(--ink);
+  background:linear-gradient(145deg,#ffffffbd,#f3faef85 50%,#eaf4e966);
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:0 22px 50px rgba(30,70,120,.22),inset 0 1px 0 #fff;
+  transition:transform .2s ease-out,opacity .16s ease}
+.card.front{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.card.front:not(.promo){overflow:visible}
+.card:not(.front){background:#eaf6e3b8}
+.top,.sec-row{border-radius:18px;background:linear-gradient(125deg,#ffffffba,#f6f8ef78);padding:10px 12px;border:1px solid #fff9}
+.sec-row{margin-top:0;padding:7px 12px}
+
+.card.dragging{transition:none;cursor:grabbing}
+.card:not(.front) *{animation-play-state:paused!important}
+/* nền nước: dải sáng gợn sóng */
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(130% 22% at 30% 24%,rgba(255,255,255,.45),transparent 60%),
+    radial-gradient(140% 20% at 70% 48%,rgba(255,255,255,.3),transparent 60%),
+    radial-gradient(150% 18% at 40% 70%,rgba(255,255,255,.25),transparent 60%)}
+
+.ph{position:relative;z-index:2;padding:14px 16px 0}
+.meta{display:flex;justify-content:space-between;align-items:center}
+.tier{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:600;
+  background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9)}
+.tier i{width:7px;height:7px;border-radius:50%;background:#2ecc71}
+.num{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:700;font-size:14px;color:rgba(31,63,102,.45)}
+.ph h3{margin:10px 0 0;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-weight:800;font-size:clamp(20px,6vw,27px);line-height:1.1;text-transform:uppercase;letter-spacing:.15px;color:var(--ink)}
+.lead{margin:6px 0 0;font-size:12px;line-height:1.45;color:var(--ink2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+.hero{position:relative;z-index:1;flex:1;min-height:120px;display:grid;place-items:center}
+.hero::after{content:"";position:absolute;left:28%;right:28%;bottom:4%;height:14px;border-radius:50%;
+  background:radial-gradient(ellipse,#1f3f6630,transparent 70%)}
+.hero .cut{position:absolute;width:83%;height:85%;object-fit:contain;pointer-events:none;
+  filter:drop-shadow(0 14px 14px rgba(31,63,102,.28))}
+.front .hero .cut{left:-5%;width:122%;height:89%;filter:drop-shadow(0 16px 12px #1f3f6659)}
+.cut[data-src]:not([src]){visibility:hidden}
+.cut[data-face="left"]{scale:-1 1}
+.front img.is-swimming{opacity:0;transition:none}
+.front .hero .swim-frame{z-index:4;filter:none;pointer-events:none;transition:none}
+.front .hero .shrimp,.front .mt .shrimp{animation:shrimpHover 3.6s ease-in-out infinite}
+.front .hero .crab,.front .mt .crab{animation:photoScuttle 4.3s ease-in-out infinite}
+@keyframes shrimpHover{
+  0%,100%{transform:translate(-1%,1%) rotate(-1deg)}
+  50%{transform:translate(1%,-1%) rotate(1deg)}
+}
+@keyframes photoScuttle{
+  0%,100%{transform:translateX(-2%)}
+  36%,62%{transform:translateX(2%)}
+}
+.hero .fishbox{width:84%}
+.front .hero .fishbox{width:114%}
+.card:not(.front) .hero>*{transform:translateX(-30px);opacity:.7;transition:transform .18s,opacity .12s}
+.front .hero>*{transition:transform .18s ease-out,opacity .12s}
+.bb{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 32% 30%,#fff 0 16%,rgba(255,255,255,.45) 36%,rgba(160,200,240,.25) 70%);
+  border:1px solid rgba(255,255,255,.85);box-shadow:inset -2px -2px 4px #5082be30}
+
+.pf{position:relative;z-index:2;padding:0 12px 12px;display:flex;flex-direction:column;gap:7px}
+.stats{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.stock-badge{display:inline-flex;align-self:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:750;color:#15594b;background:#d9f4ea}
+.stock-badge.low-stock{color:#704516;background:#fff0ca}
+.stock-badge.out-of-stock{color:#8a3140;background:#ffe4e8}
+.stat{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:12px;font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9)}
+.dots5{display:flex;gap:2px}.dots5 i{width:8px;height:5px;border-radius:3px;background:rgba(31,63,102,.15)}
+.dots5 i.on{background:linear-gradient(90deg,#6aa9ec,#2c6db5)}
+.swipe{text-align:center;font-size:11.5px;font-weight:600;color:#2b5a8c;letter-spacing:.3px}
+
+/* Combo */
+.deck.is-combo .card{width:calc(100% - 48px)}
+.promo{color:var(--ink);border-color:#fffe;
+  background:radial-gradient(ellipse at 2% 7%,#cff0dca6,transparent 58%),
+    radial-gradient(ellipse at 97% 65%,#f5e3b680,transparent 55%),
+    linear-gradient(145deg,#ffffffbd,#eff9ea80 52%,#e6dcf670);
+  box-shadow:0 16px 35px #102e3433,inset 0 1px 0 #fff,inset 0 -1px 0 #fff9}
+.promo::before{background:linear-gradient(125deg,#ffffff66,transparent 42%,#ffffff18 60%,transparent)}
+.promo .ph{padding:12px 12px 6px;text-align:center}
+.promo .ph h3{color:var(--ink);font-size:clamp(21px,6.2vw,29px);margin-top:7px}
+.combo-price{position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;
+  min-width:min(100%,178px);max-width:100%;padding:5px 13px 6px;border-radius:16px;
+  border-color:#fffd;background:linear-gradient(145deg,#fff9,#fff2 66%,#c8f5fa61);color:var(--ink);
+  box-shadow:inset 0 1px 0 #ffff,0 5px 12px #27627b26}
+.combo-price::before{content:"";position:absolute;pointer-events:none;left:-23px;top:1px;width:20px;height:40px;
+  background:
+    radial-gradient(circle at 36% 24%,#fffc 0 2px,#d7f8ff80 3px 5px,#fff9 5.5px 6px,transparent 6.5px) 0 0/16px 18px no-repeat,
+    radial-gradient(circle at 55% 55%,#fffc 0 1px,#baf3ff52 2px 3px,#fff9 3.5px 4px,transparent 4.5px) 8px 19px/12px 14px no-repeat}
+.combo-price::after{content:"";position:absolute;right:-22px;bottom:3px;width:14px;height:24px;
+  border-radius:80% 5% 75% 5%;background:linear-gradient(135deg,#d4edb8,#64a876);border:1px solid #fff9;transform:rotate(24deg)}
+.combo-price strong{font:800 clamp(28px,8.4vw,38px)/1 'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);letter-spacing:-.5px}
+.combo-price .price-label{color:var(--ink2);font-size:11px;font-weight:600;line-height:1.2}
+.retail{position:absolute;z-index:3;top:16px;left:14px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:var(--ink);
+  font:800 clamp(26px,8vw,34px)/1 'Be Vietnam Pro',system-ui,sans-serif;letter-spacing:-.5px;text-shadow:0 2px 0 #fff9}
+.retail .rmain{display:flex;align-items:baseline;gap:3px}
+.retail small{font:700 13px/1 'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink)}
+.packs{display:flex;justify-content:center;gap:7px}
+.packs .combo-price{flex:1 1 0;min-width:0;max-width:190px;padding:5px 4px 6px;text-align:center}
+.packs .combo-price span{white-space:nowrap}
+.packs:not(.n1) .combo-price span{font-size:9.5px;letter-spacing:-.1px}
+.packs .combo-price::before,.packs .combo-price::after{content:none}
+.packs:not(.n1) .combo-price strong{font-size:clamp(20px,6.4vw,28px)}
+.minis{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;
+  overflow-y:auto;overscroll-behavior-y:contain;gap:5px;padding:4px 12px;scrollbar-width:thin}
+.mini{flex:1 0 54px;min-width:0;display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:9px;
+  padding:2px 10px;border-radius:16px;box-shadow:inset 0 1px 0 #fffd,0 2px 5px #28627a1a}
+.mini.glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+.mini:nth-child(even){grid-template-columns:1fr 1.15fr;text-align:right}
+.mini:nth-child(even) .mt{grid-column:2;grid-row:1}
+.mini:nth-child(even) .mini-info{grid-column:1;grid-row:1}
+.mini-info{position:relative;z-index:1;min-width:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:clamp(12px,3.7vw,16px);
+  font-weight:800;line-height:1.12;text-transform:uppercase;overflow-wrap:anywhere;color:var(--ink)}
+.mt{position:relative;z-index:3;overflow:visible;height:46px;display:grid;grid-template-rows:minmax(0,1fr);place-items:center;min-width:0}
+.mt img{width:100%;height:100%;min-height:0;object-fit:contain}
+.mt img{filter:drop-shadow(0 5px 5px #194d6b56)}
+.mt .swim-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mini strong{display:block;margin-top:3px;color:var(--ink);font:700 11px/1.2 'Be Vietnam Pro',system-ui,sans-serif;text-transform:none}
+.promo .pf{gap:4px;padding:7px 12px 12px;text-align:center;background:linear-gradient(transparent,#f1f7ed91)}
+.benefit{margin:0;color:var(--ink);font-size:11px;line-height:1.32}
+.benefit b{display:block;color:#14545b;font-size:13px;margin-bottom:2px}
+.promo .gift,.combo-count{color:#28515d;font-size:10.5px;margin:0}
+.promo-grid .minis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr));overflow:hidden;gap:5px;padding:4px 10px}
+.promo-grid .mini{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;
+  min-height:0;gap:1px;padding:2px 4px 4px;border-radius:12px;text-align:center}
+.promo-grid .mini .mt{grid-column:1;grid-row:1;height:100%;min-height:0}
+.promo-grid .mini .mini-info{grid-column:1;grid-row:2;font-size:clamp(10px,3.1vw,13px)}
+.promo-grid .mt svg{transform:scale(2.1)}
+.promo .combo-scroll{margin:3px 0 0;font-size:10px;font-weight:700;color:#28515d}
+
+.fishbox svg,.mt svg{width:100%;height:auto;display:block;overflow:visible}
+.mt svg{max-height:100%;transform:scale(2.1)}
+.swim{animation:swim 4.2s ease-in-out infinite}
+@keyframes swim{0%,100%{transform:translate(-8px,2px) rotate(-2deg)}50%{transform:translate(10px,-7px) rotate(2deg)}}
+.walk{animation:walk 3.4s ease-in-out infinite}
+@keyframes walk{0%,100%{transform:translateX(-12px)}50%{transform:translateX(12px)}}
+.tail{animation:tail .45s ease-in-out infinite alternate}
+@keyframes tail{from{transform:rotate(-13deg) scaleX(.92)}to{transform:rotate(13deg) scaleX(1.04)}}
+.pfin{animation:pfin .5s ease-in-out infinite alternate}
+@keyframes pfin{from{transform:rotate(-20deg)}to{transform:rotate(25deg)}}
+.topfin{animation:topfin 1.2s ease-in-out infinite alternate}
+@keyframes topfin{from{transform:skewX(-6deg)}to{transform:skewX(6deg)}}
+.ant,.whisk{animation:ant 1.4s ease-in-out infinite alternate}
+@keyframes ant{from{transform:rotate(-7deg)}to{transform:rotate(6deg)}}
+.legs{animation:legs .32s ease-in-out infinite alternate}
+@keyframes legs{from{transform:translateX(-1.5px)}to{transform:translateX(1.5px)}}
+.claw{animation:claw .9s ease-in-out infinite alternate}
+@keyframes claw{from{transform:rotate(-10deg)}to{transform:rotate(12deg)}}
+
+/* điều khiển */
+.ctrl{display:flex;align-items:center;justify-content:center;gap:12px}
+.ctrl button{width:44px;height:44px;background:#f4fff7eb;color:#174f3d;border:1px solid #fff;box-shadow:0 3px 9px #102c3540;border-radius:50%;cursor:pointer;display:grid;place-items:center;padding:0}
+.ctrl button:disabled{opacity:.55;cursor:default}
+.pager{display:flex;gap:5px;align-items:center}
+.pager i{width:6px;height:6px;border-radius:4px;background:#f5fff1d9;box-shadow:0 0 0 1px #224d4266;transition:width .15s,background .15s}
+.pager i.on{width:18px;background:var(--deep)}
+
+/* thanh nhóm dưới cùng */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:5px;border-radius:24px}
+.tabs button{border:0;background:none;padding:7px 2px 6px;border-radius:19px;cursor:pointer;
+  font-size:11.5px;font-weight:600;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:2px;transition:background .3s,color .3s}
+.tabs button span{font-size:18px;line-height:1}
+.tabs button.on{background:#fff;color:var(--deep);box-shadow:0 4px 12px rgba(30,70,120,.15)}
+
+dialog{max-width:400px;width:calc(100% - 32px);border:1px solid #fff;border-radius:24px;padding:18px;color:var(--ink);
+  background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+dialog::backdrop{background:rgba(17,58,56,.25)}
+dialog h3{margin:0 0 8px;font-family:'Be Vietnam Pro',system-ui,sans-serif}
+dialog ul{margin:0;padding-left:18px;font-size:12px;line-height:1.6;max-height:50vh;overflow:auto}
+dialog a{color:var(--deep)}
+dialog form{text-align:right;margin-top:10px}
+dialog button{border:0;background:var(--dark);color:#fff;padding:8px 16px;border-radius:999px;cursor:pointer}
+
+.paused *, .paused *::before, .paused *::after{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="tank" aria-hidden="true">
+  <div class="ray" style="left:8%"></div>
+  <div class="ray" style="left:46%;animation-delay:-3s;width:60px"></div>
+  <div class="ray" style="left:78%;animation-delay:-6s"></div>
+</div>
+
+<main class="app">
+  <header class="top">
+    <div>
+      <h1 class="brand">CÁI TIỆM CÁ</h1>
+      <p class="sub">CÁ CẢNH · THỦY SINH · TÉP · CUA</p>
+    </div>
+    <div class="pill glass"><i></i>Đang mở cửa</div>
+  </header>
+
+  <div class="sec-row"><h2 id="secTitle"></h2><span class="hand">vuốt để xem →</span></div>
+
+  <section class="deck" id="deck" aria-roledescription="carousel" aria-live="polite"></section>
+
+  <div class="ctrl">
+    <button class="glass" id="prev" aria-label="Thẻ trước"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 3 5 8l5 5"/></svg></button>
+    <div class="pager" id="pager"></div>
+    <button class="glass" id="next" aria-label="Thẻ sau"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 3 5 5-5 5"/></svg></button>
+  </div>
+
+  <nav class="tabs glass" id="tabs" aria-label="Nhóm sản phẩm"></nav>
+</main>
+<button class="image-credit" type="button" id="creditBtn">nguồn ảnh</button>
+
+<dialog id="credits">
+  <h3>Nguồn ảnh</h3>
+  <ul id="creditList"></ul>
+  <form method="dialog"><button>Đóng</button></form>
+</dialog>
+
+<script>
+/* ============================================================
+   MENU — sửa ở đây.
+   gia: giá lẻ 1 con.  deals: [số lượng, giá].  img: ảnh thật (bỏ trống = hình vẽ).
+   khoe / de: điểm 1–5 (độ khỏe, độ dễ nuôi).
+   ============================================================ */
+const SECTIONS = [
+  {id:"combo", tab:"Combo", icon:"🎁", ten:"COMBO GIÁ SIÊU HỜI"},
+  {id:"giua",  tab:"Tầng giữa", icon:"🐠", ten:"CÁ TẦNG GIỮA"},
+  {id:"day",   tab:"Tầng đáy",  icon:"🪨", ten:"CÁ TẦNG ĐÁY"},
+  {id:"tep",   tab:"Tép & Cua", icon:"🦐", ten:"TÉP & CUA"},
+];
+
+const ITEMS = [
+  // ---------- TẦNG GIỮA ----------
+  {id:"diecngan", sec:"giua", stock:"in-stock", ten:"Diếc Anh Đào Siêu Đỏ", phu:"Vây ngắn", tang:"Tầng giữa", khoe:5, de:5,
+   size:"4–5 cm", tinh:"Hiền · sống đàn", gia:"15K", deals:[["13 con","180K"]], img:"img/diec.jpg", cut:"img/cut/diec-up.png",
+   mota:"Đỏ rực như quả anh đào, càng lên màu khi bể nhiều cây. Khỏe, chịu nước tốt.",
+   look:{c1:"#ff6f6f",c2:"#c2182e",fin:"#ff5a5a",fin2:"#ff9b9b",tail:"fork",top:"small",rx:44,ry:21}},
+  {id:"diecdai", sec:"giua", stock:"in-stock", ten:"Diếc Anh Đào Siêu Đỏ", phu:"Vây dài", tang:"Tầng giữa", khoe:5, de:5,
+   size:"4–5 cm", tinh:"Hiền · sống đàn", gia:"15K", deals:[["13 con","180K"]], img:"img/diecdai.jpg",
+   mota:"Bản vây dài bồng bềnh, bơi uyển chuyển, vẫn khỏe và dễ nuôi như bản vây ngắn.",
+   look:{c1:"#ff6f6f",c2:"#c2182e",fin:"#ff5a5a",fin2:"#ffb0b0",tail:"fan",ts:.95,top:"flow",rx:42,ry:20}},
+  {id:"tram", sec:"giua", stock:"in-stock", ten:"Trâm Galaxy", tang:"Tầng giữa", khoe:3, de:3,
+   size:"2–3 cm", tinh:"Nhút nhát · thích nhiều cây", gia:"45K", deals:[["5 con","220K"]], img:"img/tram.jpg", cut:"img/cut/tram-up.png",
+   mota:"Thân xanh đậm điểm chấm vàng như dải ngân hà, vây sọc cam. Nhỏ xinh, hợp bể thủy sinh.",
+   look:{c1:"#5a7fa0",c2:"#263f5c",fin:"#ff8a4c",fin2:"#ffb37a",tail:"fork",top:"small",pat:"spots",spot:"#ffe08a",sr:2.6,rx:40,ry:15}},
+  {id:"tamgiac", sec:"giua", stock:"in-stock", ten:"Tam Giác Vàng", tang:"Tầng giữa", khoe:4, de:4,
+   size:"3–4 cm", tinh:"Hiền · sống đàn", gia:"15K", deals:[["13 con","180K"]], img:"img/tamgiac.jpg", cut:"img/cut/tamgiac-v2.webp",
+   mota:"Thân cam ánh vàng với mảng tam giác đen ở đuôi. Bơi đàn rất đều, hợp bể cộng đồng.",
+   look:{c1:"#ffb36b",c2:"#e5703a",fin:"#ffc489",tail:"fork",top:"small",pat:"triangle",rx:42,ry:22}},
+  {id:"neonhd", sec:"giua", stock:"in-stock", ten:"Neon Hoàng Đế", tang:"Tầng giữa", khoe:4, de:4,
+   size:"4–5 cm", tinh:"Hiền · sống đàn", gia:"20K", deals:[["12 con","180K"]], img:"img/neonhd.jpg", cut:"img/cut/neonhd-up.png",
+   mota:"Màu ánh kim sang trọng, đuôi xẻ ba độc đáo. Thả đàn đông trông rất nổi bật.",
+   look:{c1:"#c9b6ff",c2:"#6a52c9",fin:"#b9a6ff",fin2:"#ffe08a",tail:"fork",top:"sail",pat:"line",rx:46,ry:20}},
+  {id:"neonkc", sec:"giua", stock:"in-stock", ten:"Neon Kim Cương", tang:"Tầng giữa", khoe:3, de:3,
+   size:"3–4 cm", tinh:"Hiền · sống đàn ≥10", gia:"20K", deals:[["12 con","180K"]], img:"img/neonkc.jpg", cut:"img/cut/neonkc-up.png",
+   mota:"Đầu ánh bạc lấp lánh như kim cương, sọc xanh neon và bụng đỏ rực rỡ.",
+   look:{c1:"#dfe9f5",c2:"#5a7fb0",fin:"#e3f0ff",tail:"fork",top:"small",pat:"neon",rx:50,ry:19}},
+  {id:"molly", sec:"giua", stock:"in-stock", ten:"Molly Tiger (Bò Sữa)", tang:"Tầng mặt – giữa", khoe:5, de:5,
+   size:"5–7 cm", tinh:"Hiền · đẻ con", gia:"35K", deals:[["3 con","95K"]], img:"img/molly.jpg",
+   mota:"Hoa văn vằn hổ hoặc đốm bò sữa độc lạ. Ăn tạp, ăn cả rêu, cực dễ nuôi.",
+   look:{c1:"#fbfbf7",c2:"#c9c6bc",fin:"#f3f1ea",fin2:"#ffcf8f",tail:"round",top:"sail",pat:"patches",rx:44,ry:22}},
+  {id:"hongmi", sec:"giua", stock:"in-stock", ten:"Hồng Mi Ấn Độ", phu:"Size 4–6 cm", tang:"Tầng giữa", khoe:4, de:3,
+   size:"4–6 cm", tinh:"Hiếu động · cần bể dài", gia:"65K", deals:[["5 con","265K"]], img:"img/hongmi.jpg", cut:"img/cut/hongmi-v2.webp",
+   mota:"Sọc đỏ đen nổi bật, đuôi vàng sọc đen. Bơi nhanh, cần bể rộng và nước sạch.",
+   look:{c1:"#e9f1f0",c2:"#93a8a4",fin:"#ffe28a",fin2:"#ff5a5a",tail:"zebra",top:"small",pat:"denison",rx:56,ry:16}},
+
+  // ---------- TẦNG ĐÁY ----------
+  {id:"bong", sec:"day", stock:"in-stock", ten:"Bống Tê Giác Việt", tang:"Tầng đáy", khoe:4, de:3,
+   size:"3–4 cm", tinh:"Hay giữ lãnh thổ", gia:"35K", deals:[["3 con","95K"],["5 con","155K"],["10 con","300K"]], img:"img/bong.jpg", cut:"img/cut/bong-up.png",
+   mota:"Cá bản địa Việt Nam, đốm cam đỏ, hay đậu trên đá. Thích nước trong, có dòng chảy nhẹ.",
+   look:{c1:"#f5dcb8",c2:"#b9875a",fin:"#ffd59a",fin2:"#ff8a5c",tail:"round",top:"sail",pat:"spots",spot:"#e2553b",sr:2.6,rx:50,ry:16}},
+  {id:"bobita", sec:"day", stock:"in-stock", ten:"Chuột Bobita", tang:"Tầng đáy", khoe:4, de:4,
+   size:"4–5 cm", tinh:"Hiền · theo nhóm", gia:"40K", deals:[["4 con","125K"]], img:"img/cut/bobita.png", cut:"img/cut/bobita.webp",
+   mota:"Chuột sọc đen trắng nổi bật, lục lọi dọn đáy cả ngày.",
+   look:{c1:"#f4ead8",c2:"#b9a57e",fin:"#ece0c8",tail:"fork",top:"small",pat:"bands",n:3,bw:9,band:"#2b2a28",rx:44,ry:24}},
+  {id:"green", sec:"day", stock:"in-stock", ten:"Chuột Green", tang:"Tầng đáy", khoe:5, de:5,
+   size:"5–6 cm", tinh:"Hiền · theo nhóm", gia:"38K", deals:[["3 con","95K"]], img:"img/green.jpg",
+   mota:"Thân xanh ngọc ánh kim, rất khỏe, hợp người mới chơi.",
+   look:{c1:"#7fe3d4",c2:"#2a8f86",fin:"#bff3ea",tail:"fork",top:"small",rx:44,ry:24}},
+  {id:"vene", sec:"day", stock:"in-stock", ten:"Chuột Vene", phu:"Venezuela", tang:"Tầng đáy", khoe:4, de:4,
+   size:"4–5 cm", tinh:"Hiền · theo nhóm", gia:"35K", deals:[["3 con","100K"]], img:"img/vene.jpg", cut:"img/cut/vene-up.png",
+   mota:"Thân cam ấm với mảng đen trên lưng, nổi bật trên nền cát.",
+   look:{c1:"#ffb06b",c2:"#d96026",fin:"#ffc999",tail:"fork",top:"small",pat:"bands",n:1,bw:16,band:"#2b2a28",rx:44,ry:24}},
+  {id:"cafe", sec:"day", stock:"in-stock", ten:"Chuột Cafe Vây Dài", tang:"Tầng đáy", khoe:5, de:5,
+   size:"5–6 cm", tinh:"Hiền · theo nhóm", gia:"15K", deals:[["5 con","55K"]], img:"img/cafe.jpg",
+   mota:"Màu nâu cà phê, vây dài mềm mại. Giá mềm, siêu khỏe.",
+   look:{c1:"#d7b48d",c2:"#7c5232",fin:"#c9a27a",tail:"fan",ts:.75,top:"flow",rx:42,ry:22}},
+  {id:"pigmy", sec:"day", stock:"in-stock", ten:"Chuột Pigmy", tang:"Tầng đáy – giữa", khoe:3, de:3,
+   size:"2–3 cm", tinh:"Hiền · sống đàn", gia:"45K", deals:[["5 con","195K"]], img:"img/pigmy.jpg", cut:"img/cut/pigmy-up.png",
+   mota:"Chuột tí hon, hay bơi lơ lửng theo đàn chứ không chỉ nằm đáy. Rất đáng yêu.",
+   look:{c1:"#e6eef0",c2:"#8fa3a8",fin:"#e8f0f2",tail:"fork",top:"small",pat:"line",rx:40,ry:16}},
+  {id:"muoitieu", sec:"day", stock:"in-stock", ten:"Muối Tiêu Kì Cao", tang:"Tầng đáy", khoe:5, de:5,
+   size:"5–6 cm", tinh:"Hiền · theo nhóm", gia:"25K", deals:[["4 con","80K"]], img:"img/muoitieu.jpg", cut:"img/cut/muoitieu-v2.webp",
+   mota:"Đốm muối tiêu, vây lưng cao như cánh buồm. Khỏe, hiền, dễ chăm.",
+   look:{c1:"#e9e4d6",c2:"#8f8a7a",fin:"#d9d4c4",tail:"fork",top:"sail",pat:"spots",spot:"#3a3a38",rx:44,ry:24}},
+  {id:"chachngua", sec:"day", stock:"in-stock", ten:"Chạch Ngựa", tang:"Tầng đáy", khoe:4, de:3,
+   size:"lớn tới ~20 cm", tinh:"Hiền · thích vùi cát", gia:"25K", deals:[["5 con","125K"]], img:"img/chachngua.jpg", cut:"img/cut/chachngua-v2.webp",
+   mota:"Mõm dài như mặt ngựa, thích vùi mình trong cát mịn. Nên dùng nền cát.",
+   look:{c1:"#efe0bf",c2:"#b49a68",fin:"#efe2c6",tail:"fork",top:"small",pat:"spots",spot:"#6b5a3a",sr:2.2,rx:64,ry:13}},
+  {id:"kuli", sec:"day", stock:"in-stock", ten:"Chạch Kuli", tang:"Tầng đáy", khoe:4, de:4,
+   size:"8–10 cm", tinh:"Nhút nhát · cần chỗ trốn", gia:"20K–30K", giaCombo:"20K", sizes:[["Size M","20K"],["Size L","30K"]], deals:[["Mua 10","TẶNG 1"]], img:"img/kuli.jpg",
+   mota:"Thân dài như rắn tí hon, vằn cam đen. Hay chui rúc, ban đêm mới hoạt động mạnh.",
+   look:{c1:"#ffb066",c2:"#e66a2c",fin:"#ffbf80",tail:"round",top:"none",pat:"bands",n:6,bw:7,band:"#2b2420",rx:70,ry:10}},
+  {id:"meomt", sec:"day", stock:"in-stock", ten:"Mèo Mã Thiên", tang:"Tầng đáy", khoe:4, de:4,
+   size:"10–12 cm", tinh:"Hiếu động · tránh cá quá nhỏ", gia:"45K", deals:[["3 con","115K"]], img:"img/meomt.jpg", cut:"img/cut/meomt-up.png",
+   mota:"Thân bạc đốm đen, râu dài. Bơi rất nhanh, hoạt động mạnh về đêm.",
+   look:{c1:"#eef1f4",c2:"#9aa6b4",fin:"#e3e8ee",tail:"fork",top:"sail",pat:"spots",spot:"#20242c",whisk:34,rx:52,ry:17}},
+  {id:"meobb", sec:"day", stock:"in-stock", ten:"Mèo Bụng Bự", tang:"Tầng đáy", khoe:4, de:4,
+   size:"", tinh:"Hiền · dọn đáy", gia:"65K", deals:[["3 con","185K"]], img:"img/cut/meobb.png", cut:"img/cut/meobb.webp",
+   mota:"Cá mèo dáng tròn đầm, bụng phệ dễ thương, chuyên đi dọn đáy.",
+   look:{c1:"#5d6470",c2:"#23272e",fin:"#4a515c",tail:"round",top:"small",whisk:24,rx:46,ry:26}},
+  {id:"panda", sec:"day", stock:"in-stock", ten:"Bác Sĩ Panda", tang:"Tầng đáy", khoe:4, de:4,
+   size:"6–8 cm", tinh:"Hiền · ăn rêu", gia:"55K", deals:[["3 con","145K"]], img:"img/panda.jpg",
+   mota:"Thân vàng sọc đen như gấu trúc, bám đá gặm rêu cả ngày. Thích nước chảy, giàu oxy.",
+   look:{c1:"#ffd54a",c2:"#d39a10",fin:"#ffe08a",tail:"fork",top:"small",pat:"bands",n:4,bw:8,band:"#2b2420",rx:50,ry:17}},
+
+  // ---------- TÉP & CUA ----------
+  {id:"cua", sec:"tep", stock:"in-stock", ten:"Cua Ớt Mini", tang:"Bán cạn", khoe:4, de:3,
+   size:"2–3 cm", tinh:"Hay leo · cần nắp đậy", gia:"30K", deals:[["6 con","145K"],["13 con","290K"]], img:"img/cua.jpg",
+   mota:"Cua tí hon càng đỏ như ớt. Cần bể có phần cạn để leo lên nghỉ.",
+   look:{kind:"crab",c1:"#ff6a5a",c2:"#c02a2a"}},
+  {id:"yamato", sec:"tep", stock:"in-stock", ten:"Tép Yamato", tang:"Mọi tầng", khoe:5, de:4,
+   size:"3–5 cm", tinh:"Hiền · ăn rêu", gia:"60K", deals:[["3 con · Size 3 cm","110K"],["2 con · Size 4 cm","110K"]], img:"img/yamato.jpeg", cut:"img/cut/yamato-up.png",
+   mota:"Tép trong suốt chấm nâu, ăn rêu cực giỏi – trợ thủ dọn bể số 1.",
+   look:{kind:"shrimp",c1:"#e3eaec",c2:"#8c9aa0",dots:"#8a5a3a"}},
+  {id:"firered", sec:"tep", stock:"in-stock", ten:"Tép Fire Red", tang:"Mọi tầng · bám cây", khoe:4, de:4,
+   size:"2–3 cm", tinh:"Hiền · sinh sản trong bể", gia:"15K", deals:[["12 con","85K"]], img:"img/firered.jpg", cut:"img/cut/firered-up.png",
+   mota:"Đỏ rực như lửa, bò khắp lá cây dọn rêu. Thả đông trông rất vui mắt.",
+   look:{kind:"shrimp",c1:"#ff5a5a",c2:"#c41c2a"}},
+  {id:"vang", sec:"tep", stock:"in-stock", ten:"Tép Vàng Đài Loan", tang:"Mọi tầng · bám cây", khoe:4, de:4,
+   size:"2–3 cm", tinh:"Hiền · sinh sản trong bể", gia:"15K", deals:[["12 con","155K"]], img:"img/vang.jpg",
+   mota:"Vàng tươi nổi bật trên nền rêu xanh. Hiền, dễ sinh sản.",
+   look:{kind:"shrimp",c1:"#ffe066",c2:"#e8a510"}},
+  {id:"tepgreen", sec:"tep", stock:"in-stock", ten:"Tép Green", tang:"Mọi tầng · bám cây", khoe:3, de:3,
+   size:"2–3 cm", tinh:"Hiền · thích nhiều cây", gia:"40K", deals:[["12 con","225K"]], img:"img/tepgreen.jpg",
+   mota:"Xanh lá mát mắt, hòa vào bể thủy sinh nhiều cây.",
+   look:{kind:"shrimp",c1:"#7ee08a",c2:"#2f9a52"}},
+];
+
+/* Combo: items = [id, số lượng]. Số 0 nghĩa là chưa xác nhận. */
+const COMBOS = [
+  {ten:"Combo 10 Chuột", price:285, benefit:"Siêu dọn thức ăn thừa", detail:"Đàn 10 cá chuột chịu khó rà nền, nhặt vụn thức ăn rơi xuống đáy.", sl:"10 con",
+   items:[["bobita",2],["muoitieu",2],["green",2],["pigmy",2],["vene",2]]},
+  {ten:"Combo 5 Chuột", price:150, benefit:"Tầng đáy thêm sinh động", detail:"Năm dáng cá chuột cùng lục tìm vụn thức ăn trên nền cát.", sl:"5 con",
+   items:[["bobita",1],["muoitieu",1],["green",1],["pigmy",1],["vene",1]]},
+  {ten:"Combo 10 Tầng Đáy", price:360, grid:true, benefit:"Đa dạng tầng đáy", detail:"Kết hợp cá rà nền, cá thích vùi cát và cá gặm rêu trên đá.", sl:"10 con",
+   items:[["bobita",1],["green",1],["vene",1],["muoitieu",1],["pigmy",1],["chachngua",1],["kuli",1],["meomt",1],["meobb",1],["panda",1]]},
+  {ten:"Combo 20 Tầng Giữa", price:455, benefit:"Bể rực màu", detail:"Bốn dòng cá tạo mảng màu và chuyển động ở tầng giữa.", sl:"20 con",
+   items:[["diecngan",5],["tram",5],["tamgiac",5],["neonkc",5]]},
+  {ten:"Combo Tép 1", price:385, benefit:"Sắc đỏ vàng trên thảm rêu", detail:"Tép đỏ và tép vàng bám lá, nhặt vụn thức ăn nhỏ và gặm màng sinh học.", sl:"33 con",
+   items:[["firered",15],["vang",15]], tang:"tặng thêm 3 con ngẫu nhiên"},
+  {ten:"Combo Tép 2", price:385, benefit:"Tép màu cùng Yamato", detail:"Tép màu làm nổi nền cây, Yamato giúp gặm một số loại rêu mềm.", sl:"",  // Tổng ghi trên bảng khác tổng từng loại.
+   items:[["tepgreen",5],["firered",5],["vang",5],["yamato",2]], tang:"tặng 1 green + 1 vàng + 1 đỏ"},
+];
+
+/* Nguồn ảnh tham chiếu */
+const CREDITS = [
+  ["Mèo Bụng Bự · dựng lại từ ba góc ảnh tham chiếu","Ảnh do chủ tiệm cung cấp · xử lý ImageGen","","img/cut/meobb.png"],
+  ["Chuột Bobita · dựng lại từ ảnh do chủ tiệm cung cấp","Ảnh tham chiếu Thiên Đức Aquarium · xử lý ImageGen","","img/cut/bobita.png"],
+  ["Nền hồ thủy sinh Bank of river","Marcin Ratajczak · AGA 2012","","https://showcase.aquatic-gardeners.org/2012/show122.html"],
+  ["Diếc anh đào","","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Male_Cherry_Barb_700.jpg"],
+  ["Trâm galaxy","Cisamarc","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Danio_Margaritatus_malle_(zoom).jpg"],
+  ["Tam giác vàng","Roel Balingit","CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Harlequin_rasboras_03.jpg"],
+  ["Neon hoàng đế","Citron","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Emperor_tetra.jpg"],
+  ["Neon kim cương","Holger Krisp","CC BY 3.0","https://commons.wikimedia.org/wiki/File:Neonsalmler_Paracheirodon_innesi.jpg"],
+  ["Hồng mi Ấn Độ","Mattia Nocciola","CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Dawkinsia_denisonii_specimen_Natural_History_Museum_University_of_Pisa_(cropped).jpg"],
+  ["Chuột pigmy","Carnat Joel","CC BY 2.0","https://commons.wikimedia.org/wiki/File:Corydoras_pygmaeus_carnat_joel_5.jpg"],
+  ["Muối tiêu","Mattia Nocciola","CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Hoplisoma_paleatum_Natural_History_Museum_University_of_Pisa.jpg"],
+  ["Chạch ngựa","Drachenschwertträger36","CC BY-SA 2.0 de","https://commons.wikimedia.org/wiki/File:Acantopsis_dialuzona.jpg"],
+  ["Mèo mã thiên","Claire H.","CC BY-SA 2.0","https://commons.wikimedia.org/wiki/File:Pimelodus_pictus.jpg"],
+  ["Tép yamato","Stefanie Leuker","CC0","https://commons.wikimedia.org/wiki/File:Amano_Garnele_(85281493).jpeg"],
+  ["Chuột Green","Maschinenkanone","CC BY-SA 2.0 de","https://commons.wikimedia.org/wiki/File:Brochis_splendens_im_Aquarium.jpg"],
+  ["Chạch Kuli","Louie","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Pangio_kuhlii.jpg"],
+  ["Bác Sĩ Panda","Marcin Adrian","CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Prachtalgenfresser_(Panda_Garra,_Garra_flavatra)_by_Marcin_Adrian.jpg"],
+  ["Tép Vàng Đài Loan","DirkBlankenhaus","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Neocaridina-heteropoda-var-yellow.jpg"],
+  ["Tép Fire Red","TheJammingYam","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Red_Cherry_Shrimp_1.jpg"],
+  ["Diếc anh đào vây dài","Wildboar Fishroom","","https://wildboarfishroom.myshopify.com/products/long-fin-cherry-barb"],
+  ["Molly bò sữa","Corpse89","CC BY-SA 3.0","https://commons.wikimedia.org/wiki/File:Dalmatian_molly.jpg"],
+  ["Bống tê giác Việt","Andrewbogott","CC BY-SA 4.0","https://commons.wikimedia.org/wiki/File:Rhinogobius_zhoui_male.jpg"],
+  ["Chuột Vene cam","JustFishyThing","","https://www.ebay.com/itm/366048852631"],
+  ["Chuột Cafe vây dài","Thủy Sinh Tím","","https://thuysinhtim.vn/ca-chuot-cafe-vi-dai"],
+  ["Cua ớt mini","GreenFlow","","https://www.greenflow.hk/products/mini-chili-crab-llyoplax-sp"],
+  ["Tép Green","Thủy Sinh Tím","","https://thuysinhtim.vn/tep-green-jade"],
+];
+
+/* ================= hình vẽ (dùng khi chưa có ảnh thật) ================= */
+let uid = 0;
+const art = L => { const id = "a" + (uid++);
+  return L.kind==="shrimp" ? shrimpSVG(L,id) : L.kind==="crab" ? crabSVG(L,id) : fishSVG(L,id); };
+
+function fishSVG(L, id){
+  const cx=110, cy=60, rx=L.rx, ry=L.ry, tx=cx-rx+6, s=L.ts||1;
+  const ex=cx+rx*.55, ey=cy-ry*.22;
+  const fork=`M${tx} ${cy} C${tx-16} ${cy-8} ${tx-28} ${cy-24} ${tx-34} ${cy-28} C${tx-26} ${cy-10} ${tx-26} ${cy+10} ${tx-34} ${cy+28} C${tx-28} ${cy+24} ${tx-16} ${cy+8} ${tx} ${cy}Z`;
+  const tails={ fork, zebra:fork,
+    fan:`M${tx} ${cy} C${tx-26*s} ${cy-36*s} ${tx-56*s} ${cy-42*s} ${tx-62*s} ${cy-28*s} C${tx-72*s} ${cy-6} ${tx-72*s} ${cy+6} ${tx-62*s} ${cy+28*s} C${tx-56*s} ${cy+42*s} ${tx-26*s} ${cy+36*s} ${tx} ${cy}Z`,
+    round:`M${tx} ${cy} C${tx-12} ${cy-20} ${tx-34} ${cy-24} ${tx-38} ${cy} C${tx-34} ${cy+24} ${tx-12} ${cy+20} ${tx} ${cy}Z` };
+  const top={
+    small:`M${cx-22} ${cy-ry+5} Q${cx-8} ${cy-ry-18} ${cx+12} ${cy-ry+3}Z`,
+    sail:`M${cx-24} ${cy-ry+5} Q${cx-14} ${cy-ry-34} ${cx+10} ${cy-ry-30} Q${cx+10} ${cy-ry-10} ${cx+16} ${cy-ry+4}Z`,
+    flow:`M${cx-34} ${cy-ry+8} C${cx-40} ${cy-ry-30} ${cx-74} ${cy-ry-30} ${cx-80} ${cy-ry-6} C${cx-56} ${cy-ry} ${cx-6} ${cy-ry-12} ${cx+10} ${cy-ry+4}Z` }[L.top];
+  const bottom = L.top==="flow"
+    ? `M${cx-30} ${cy+ry-6} C${cx-40} ${cy+ry+30} ${cx-70} ${cy+ry+28} ${cx-76} ${cy+ry+8} C${cx-50} ${cy+ry+4} ${cx-6} ${cy+ry+10} ${cx+6} ${cy+ry-4}Z`
+    : `M${cx-6} ${cy+ry-4} Q${cx-4} ${cy+ry+14} ${cx-20} ${cy+ry+10}Z`;
+  const dark="#1d1d24";
+  const P={
+    neon:()=>`<rect x="${cx-rx}" y="${cy+1}" width="${rx*2}" height="${ry}" fill="#ff5a72"/>
+      <path d="M${cx-rx} ${cy-3} Q${cx} ${cy-9} ${cx+rx*.8} ${cy-4} L${cx+rx*.8} ${cy+2} Q${cx} ${cy-2} ${cx-rx} ${cy+3}Z" fill="#5ff2ff"/>`,
+    bands:()=>Array.from({length:L.n||3},(_,i)=>{const x=cx-rx+2*rx*(i+1)/((L.n||3)+1);
+      return `<rect x="${x-(L.bw||6)/2}" y="${cy-ry}" width="${L.bw||6}" height="${ry*2}" fill="${L.band||dark}" opacity=".85"/>`}).join(""),
+    spots:()=>[[-.45,-.2],[-.15,-.45],[.15,-.15],[-.3,.25],[.05,.3],[.35,-.4],[-.65,.05],[.4,.15],[-.05,-.05]]
+      .map(([x,y])=>`<circle cx="${cx+x*rx}" cy="${cy+y*ry}" r="${L.sr||3}" fill="${L.spot||"#5a4630"}" opacity=".8"/>`).join(""),
+    line:()=>`<rect x="${cx-rx}" y="${cy-2}" width="${rx*1.7}" height="5" rx="2.5" fill="#3d3a2c" opacity=".75"/>`,
+    triangle:()=>`<path d="M${cx+rx*.1} ${cy-ry*.35} L${cx-rx*.8} ${cy-ry*.8} L${cx-rx*.55} ${cy+ry}Z" fill="${dark}" opacity=".85"/>`,
+    patches:()=>[[-.4,-.2,.25,.4],[.12,.35,.22,.3],[.3,-.4,.18,.28],[-.75,.3,.16,.35]]
+      .map(([x,y,a,b])=>`<ellipse cx="${cx+x*rx}" cy="${cy+y*ry}" rx="${a*rx}" ry="${b*ry}" fill="${dark}"/>`).join(""),
+    denison:()=>`<rect x="${cx-rx}" y="${cy+1}" width="${rx*1.8}" height="4" fill="${dark}"/>
+      <rect x="${cx-rx*.15}" y="${cy-5}" width="${rx*.85}" height="4" rx="2" fill="#ff3b4e"/>`,
+  };
+  const pat = L.pat ? P[L.pat]() : "";
+  const zebra = L.tail==="zebra"
+    ? `<g clip-path="url(#t${id})"><rect x="${tx-40}" y="${cy-30}" width="50" height="60" fill="#ffe28a"/>
+         <rect x="${tx-40}" y="${cy-24}" width="50" height="8" fill="${dark}"/><rect x="${tx-40}" y="${cy+16}" width="50" height="8" fill="${dark}"/></g>` : "";
+  const er=Math.max(5,Math.min(ry*.32,9));
+  const whisk = L.whisk ? `<g class="whisk" style="transform-origin:${cx+rx-4}px ${cy+ry*.3}px">
+      <path d="M${cx+rx-4} ${cy+ry*.3} q12 6 ${L.whisk} 18 M${cx+rx-6} ${cy+ry*.4} q8 10 ${L.whisk*.6} 24" stroke="${L.c2}" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>` : "";
+  return `<svg viewBox="-40 -40 250 200" aria-hidden="true">
+  <defs>
+    <radialGradient id="b${id}" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="${L.c1}"/><stop offset="1" stop-color="${L.c2}"/></radialGradient>
+    <linearGradient id="f${id}" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${L.fin}" stop-opacity=".95"/><stop offset="1" stop-color="${L.fin2||L.fin}" stop-opacity=".75"/></linearGradient>
+    <clipPath id="c${id}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>
+    <clipPath id="t${id}"><path d="${fork}"/></clipPath>
+  </defs>
+  <g class="swim">
+    ${top?`<g class="topfin" style="transform-origin:${cx}px ${cy-ry}px"><path d="${top}" fill="url(#f${id})"/></g>`:""}
+    <path d="${bottom}" fill="url(#f${id})"/>
+    <g class="tail" style="transform-origin:${tx+4}px ${cy}px">
+      <path d="${tails[L.tail]}" fill="url(#f${id})"/>${zebra}
+      ${L.tail==="fan"?`<path d="M${tx} ${cy} L${tx-50*s} ${cy-24*s} M${tx} ${cy} L${tx-58*s} ${cy} M${tx} ${cy} L${tx-50*s} ${cy+24*s}" stroke="#fff" stroke-opacity=".45" stroke-width="1.5" fill="none"/>`:""}
+    </g>
+    ${whisk}
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#b${id})"/>
+    <g clip-path="url(#c${id})">${pat}
+      <ellipse cx="${cx-rx*.15}" cy="${cy-ry*.55}" rx="${rx*.55}" ry="${ry*.28}" fill="#fff" opacity=".45"/>
+      <ellipse cx="${cx}" cy="${cy+ry*.9}" rx="${rx}" ry="${ry*.35}" fill="#000" opacity=".08"/>
+    </g>
+    <ellipse class="pfin" style="transform-origin:${cx+12}px ${cy+6}px" cx="${cx+2}" cy="${cy+ry*.35}" rx="11" ry="5.5" fill="url(#f${id})" opacity=".9"/>
+    <ellipse cx="${ex-4}" cy="${ey+ry*.45}" rx="5" ry="3" fill="#ff8fa3" opacity=".55"/>
+    <g>
+      <circle cx="${ex}" cy="${ey}" r="${er}" fill="#fff"/>
+      <circle cx="${ex+1.5}" cy="${ey+.5}" r="${er*.68}" fill="#14201f"/>
+      <circle cx="${ex+2.6}" cy="${ey-1.4}" r="1.5" fill="#fff"/>
+    </g>
+    <path d="M${ex+4} ${ey+er+3} q4 3 8 0" stroke="#14201f" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>`;
+}
+
+function shrimpSVG(L, id){
+  const legs=[96,108,120,132,144].map(x=>`<path d="M${x} 72 l-3 13" stroke="${L.c2}" stroke-width="2.2" stroke-linecap="round"/>`).join("");
+  const dots=L.dots?[[92,52],[104,62],[118,50],[132,62],[146,52]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.2" fill="${L.dots}" opacity=".7"/>`).join(""):"";
+  return `<svg viewBox="-40 -40 250 200" aria-hidden="true">
+  <defs><linearGradient id="b${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".3" stop-color="${L.c1}"/><stop offset="1" stop-color="${L.c2}"/></linearGradient></defs>
+  <g class="swim">
+    <g class="ant" style="transform-origin:162px 52px">
+      <path d="M162 50 Q198 16 218 30" stroke="${L.c2}" stroke-width="1.6" fill="none"/>
+      <path d="M162 54 Q204 42 220 60" stroke="${L.c2}" stroke-width="1.4" fill="none"/></g>
+    <g class="legs">${legs}</g>
+    <g class="tail" style="transform-origin:68px 76px"><path d="M68 76 C52 64 34 64 28 74 C36 80 40 92 44 100 C54 92 62 84 68 76Z" fill="url(#b${id})" opacity=".9"/></g>
+    <path d="M60 80 C62 50 90 36 122 36 C152 36 168 44 174 56 C168 70 150 74 124 74 C100 74 84 78 74 92Z" fill="url(#b${id})"/>
+    ${[88,102,116,130].map(x=>`<path d="M${x} 40 q-6 17 0 33" stroke="#fff" stroke-opacity=".45" stroke-width="2" fill="none"/>`).join("")}
+    ${dots}
+    <ellipse cx="120" cy="46" rx="26" ry="5" fill="#fff" opacity=".45"/>
+    <path d="M170 50 L194 45 L172 57Z" fill="${L.c2}"/>
+    <g>
+      <circle cx="160" cy="50" r="6.5" fill="#fff"/><circle cx="161.5" cy="50.5" r="4.4" fill="#14201f"/><circle cx="163" cy="48.6" r="1.5" fill="#fff"/></g>
+    <path d="M160 61 q4 3 8 0" stroke="#14201f" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  </g></svg>`;
+}
+
+function crabSVG(L, id){
+  const legs=[0,1,2].map(i=>`<path d="M86 ${80+i*7} q-20 ${-4+i*5} -30 ${14+i*4}" /><path d="M134 ${80+i*7} q20 ${-4+i*5} 30 ${14+i*4}"/>`).join("");
+  const claw=`<g class="claw" style="transform-origin:84px 68px">
+      <path d="M86 68 L66 50" stroke="${L.c2}" stroke-width="7" stroke-linecap="round"/>
+      <ellipse cx="58" cy="40" rx="13" ry="10" fill="url(#b${id})"/><ellipse cx="52" cy="54" rx="8" ry="5" fill="url(#b${id})"/></g>`;
+  return `<svg viewBox="-40 -40 250 200" aria-hidden="true">
+  <defs><radialGradient id="b${id}" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".25" stop-color="${L.c1}"/><stop offset="1" stop-color="${L.c2}"/></radialGradient></defs>
+  <g class="walk">
+    <g class="legs" stroke="${L.c2}" stroke-width="5" stroke-linecap="round" fill="none">${legs}</g>
+    ${claw}<g transform="translate(220,0) scale(-1,1)">${claw}</g>
+    <path d="M100 54 L97 38 M120 54 L123 38" stroke="${L.c2}" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="110" cy="74" rx="40" ry="26" fill="url(#b${id})"/>
+    <ellipse cx="102" cy="62" rx="20" ry="6" fill="#fff" opacity=".45"/>
+    ${[97,123].map(x=>`<g><circle cx="${x}" cy="36" r="6.5" fill="#fff"/><circle cx="${x+1}" cy="36.5" r="4.2" fill="#14201f"/><circle cx="${x+2.4}" cy="34.6" r="1.4" fill="#fff"/></g>`).join("")}
+    <ellipse cx="92" cy="80" rx="5" ry="3" fill="#ffb3b3" opacity=".7"/><ellipse cx="128" cy="80" rx="5" ry="3" fill="#ffb3b3" opacity=".7"/>
+    <path d="M104 82 q6 5 12 0" stroke="#14201f" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g></svg>`;
+}
+
+/* ================= thẻ ================= */
+const BY = Object.fromEntries(ITEMS.map(x=>[x.id,x]));
+const dots5 = n => `<span class="dots5">${Array.from({length:5},(_,i)=>`<i class="${i<n?'on':''}"></i>`).join("")}</span>`;
+const pad = n => String(n).padStart(2,"0");
+// tên dài xuống hàng thì dòng dưới luôn có ít nhất 2 chữ; "/" đi cùng chữ sau nó
+const keepTail = t => t.replace(/ \/ /g, " /\u00a0").replace(/ (\S+)$/, "\u00a0$1");
+const dong = s => /^\d+K$/.test(s) ? parseInt(s, 10) * 1000 : null;            // "15K" -> 15000
+const retailText = gia => gia.split("–").map(x => dong(x.trim())).every(Boolean)
+  ? gia.split("–").map(x => dong(x.trim()).toLocaleString("vi-VN")).join("–") : gia;
+function packFrame(f, [label, price]){
+  const q = parseInt(label, 10);
+  return `<div class="combo-price glass">
+    <span class="price-label">${q ? `Combo ${label.replace(/\bcon\b/, "bé")}` : label}</span>
+    <strong>${price}</strong>
+  </div>`;
+}
+
+const BUBBLES = `<span class="bb" style="width:18px;height:18px;left:14%;top:12%"></span>
+  <span class="bb" style="width:11px;height:11px;left:22%;top:26%;animation-delay:-1s"></span>
+  <span class="bb" style="width:20px;height:20px;right:12%;top:52%;animation-delay:-2s"></span>
+  <span class="bb" style="width:10px;height:10px;right:20%;top:68%;animation-delay:-3s"></span>`;
+const cutOf = f => f.cut || f.img.replace(/^img\/(.+)\.\w+$/, "img/cut/$1.webp");
+const PHOTO_BOUNDS = {"img/cut/meobb.webp":[13, 7, 872, 283],"img/cut/bobita.webp":[7, 6, 887, 281],"img/cut/tepgreen.webp":[32,3,654,233],"img/cut/meomt-v2.webp":[23,4,673,256],"img/cut/kuli.webp":[27,57,666,137],"img/cut/cua.webp":[7,4,701,269],"img/cut/molly.webp":[5,5,710,304],"img/cut/diec-v2.webp":[43,15,640,256],"img/cut/firered.webp":[46,10,619,220],"img/cut/tram-v2.webp":[32,9,667,249],"img/cut/pigmy-v2.webp":[52,66,596,386],"img/cut/vene.webp":[89,6,555,229],"img/cut/diecdai.webp":[35,12,631,220],"img/cut/green.webp":[22,6,674,249],"img/cut/muoitieu-v2.webp":[50,6,616,301],"img/cut/hongmi-v2.webp":[50,21,635,204],"img/cut/chachngua-v2.webp":[28,40,664,161],"img/cut/neonhd-v2.webp":[70,17,580,280],"img/cut/panda.webp":[36,5,650,231],"img/cut/neonkc-v2.webp":[111,7,508,227],"img/cut/yamato-v2.webp":[117,18,426,440],"img/cut/tamgiac-v2.webp":[38,21,646,275],"img/cut/cafe.webp":[105,4,517,234],"img/cut/vang.webp":[29,5,678,230],"img/cut/bong.webp":[7,8,705,223]};
+const headsRight = new Set(["meobb","bobita","neonhd","molly","bong","pigmy","muoitieu","chachngua","kuli","meomt","vang"]);
+const photoClass = f => `cut ${f.look.kind || "fish"}`;
+const faceOf = f => f.look.kind === "crab" ? "front" : headsRight.has(f.id) ? "right" : "left";
+
+function totalRetail(items){
+  let total = 0;
+  for (const [id, count] of items) {
+    const price = BY[id]?.giaCombo ?? BY[id]?.gia;
+    if (!Number.isInteger(count) || count <= 0 || !/^[1-9]\d*K$/.test(price)) return null;
+    total += count * parseInt(price, 10);
+  }
+  return total;
+}
+
+const STOCK_LABELS = {"in-stock":"Còn hàng","low-stock":"Sắp hết hàng","out-of-stock":"Hết hàng"};
+const itemCard = (f,j) => `
+  <article class="card" aria-label="${f.ten}">
+    
+    <header class="ph">
+      <div class="meta"><span class="tier"><i></i>${f.tang}</span><span class="num">${pad(j+1)}</span></div>
+      <h3>${keepTail(f.ten)}</h3>
+      <p class="lead">${f.phu?`<b>${f.phu}</b> · `:""}${f.mota}</p>
+    </header>
+    <div class="hero">${BUBBLES}
+      ${f.gia ? `<div class="retail">${f.sizes ? f.sizes.map(([size, gia]) => `<span class="rmain">${retailText(gia)}<small>/bé · ${size}</small></span>`).join("") : `<span class="rmain">${retailText(f.gia)}<small>/bé</small></span>`}</div>` : ""}
+      ${f.img ? `<img class="${photoClass(f)}" data-src="${cutOf(f)}" decoding="async" data-face="${faceOf(f)}" alt="${f.ten}" draggable="false">`
+              : `<div class="fishbox">${art(f.look)}</div>`}
+    </div>
+    <footer class="pf">
+      ${Object.hasOwn(STOCK_LABELS,f.stock) ? `<span class="stock-badge ${f.stock}">${STOCK_LABELS[f.stock]}</span>` : ""}
+      <div class="stats">
+        <span class="stat">Khỏe ${dots5(f.khoe)}</span><span class="stat">Dễ nuôi ${dots5(f.de)}</span>
+        ${f.size?`<span class="stat">📏 ${f.size}</span>`:""}
+      </div>
+      ${f.deals.length ? `<div class="packs n${f.deals.length}">${f.deals.map(d => packFrame(f, d)).join("")}</div>` : ""}
+      <div class="swipe">${f.tinh}</div>
+    </footer>
+  </article>`;
+
+const comboCard = c => {
+  const retail = totalRetail(c.items);
+  const saving = retail === null ? null : retail - c.price;
+  return `
+  <article class="card promo${c.grid ? " promo-grid" : ""}" aria-label="${c.ten}">
+    ${BUBBLES}
+    <header class="ph">
+      <div class="combo-price glass">
+        <span class="price-label">Mua lẻ ${retail === null ? "· Chưa tính được" : saving > 0 ? `<s>${retail}K</s>` : `${retail}K`}</span>
+        <strong aria-label="Giá combo ${c.price}K">${c.price}K</strong>
+      </div>
+      <h3>${keepTail(c.ten)}</h3>
+      ${c.sl ? `<p class="combo-count">${c.sl}</p>` : ""}
+      ${!c.grid && c.items.length > 6 ? `<p class="combo-scroll">Cuộn để xem ${c.items.length} loại ↓</p>` : ""}
+    </header>
+    <div class="minis" role="region" aria-label="Các loại trong combo"${c.grid ? "" : ' tabindex="0"'}>
+      ${c.items.map(([id,n])=>{
+        const f=BY[id];
+        return `<div class="mini glass">
+          <div class="mt">${f.img ? `<img class="${photoClass(f)}" data-src="${cutOf(f)}" decoding="async" data-face="${faceOf(f)}" alt="" draggable="false">` : art(f.look)}</div>
+          <div class="mini-info">${f.ten}${n ? `<strong>${n} con</strong>` : ""}</div>
+        </div>`;
+      }).join("")}
+    </div>
+    <footer class="pf">
+      <p class="benefit"><b>${c.benefit}</b>${c.detail}</p>
+      ${c.tang ? `<p class="gift">🎁 ${c.tang}</p>` : ""}
+      ${c.items.some(([,n])=>!n) ? '<p class="combo-count">Hỏi tiệm về số lượng từng loại.</p>' : ""}
+    </footer>
+  </article>`;
+};
+
+/* ================= xấp thẻ vuốt ================= */
+const deck=document.getElementById("deck"), pager=document.getElementById("pager");
+const prevB=document.getElementById("prev"), nextB=document.getElementById("next");
+let cards=[], idx=0;
+
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let swimmingCard = null, swimmers = [], swimRequest = 0, lastSwimDraw = 0;
+
+// The wave gains amplitude toward the tail while the head stays steady.
+function bodyWave(distance, phase, width){
+  return width * .035 * distance ** 2 * Math.sin(phase - distance * 2.8);
+}
+
+function drawFish({photo, swimFrame, swimContext, phaseOffset}, now){
+  if (!photo.complete || !photo.naturalWidth) return;
+  const compact = photo.closest(".mt") !== null;
+  const ratio = Math.min(window.devicePixelRatio || 1, compact ? 2 : 1.5);
+  const displayWidth = photo.clientWidth;
+  const displayHeight = photo.clientHeight;
+  const padding = compact ? Math.ceil(displayWidth * .06) : 0;
+  const width = Math.round((displayWidth + padding * 2) * ratio);
+  const height = Math.round((displayHeight + padding * 2) * ratio);
+  if (compact) {
+    swimFrame.style.inset = "auto";
+    swimFrame.style.width = `${displayWidth + padding * 2}px`;
+    swimFrame.style.height = `${displayHeight + padding * 2}px`;
+    swimFrame.style.left = `${-padding}px`;
+    swimFrame.style.top = `${-padding}px`;
+  }
+  if (width && height) {
+    if (swimFrame.width !== width) swimFrame.width = width;
+    if (swimFrame.height !== height) swimFrame.height = height;
+    const [cropX,cropY,cropWidth,cropHeight] = compact
+      ? PHOTO_BOUNDS[photo.dataset.src] || [0,0,photo.naturalWidth,photo.naturalHeight]
+      : [0,0,photo.naturalWidth,photo.naturalHeight];
+    const scale = compact ? Math.min(displayWidth * ratio * .98 / cropWidth, displayHeight * ratio / cropHeight)
+      : Math.min(width * .96 / cropWidth, height * .94 / cropHeight);
+    const fishWidth = cropWidth * scale;
+    const fishHeight = cropHeight * scale;
+    const time = now / 1000 + phaseOffset;
+    const phase = time * 6.5 + Math.sin(time * 1.6) * .55;
+    const x = (width - fishWidth) / 2 + Math.sin(time * 1.5) * width * .012;
+    const y = (height - fishHeight) / 2 + Math.sin(time * 2.1) * height * .008;
+    const facesRight = photo.dataset.face === "right";
+    const direction = facesRight ? 1 : -1;
+    const strips = compact ? 10 : 16;
+    const slice = fishWidth / strips;
+
+    swimContext.setTransform(1, 0, 0, 1, 0, 0);
+    swimContext.clearRect(0, 0, width, height);
+    swimContext.imageSmoothingQuality = "high";
+    for (let i = 0; i < strips; i++) {
+      const start = facesRight ? 1 - i / strips : i / strips;
+      const end = facesRight ? start - 1 / strips : start + 1 / strips;
+      const offset = bodyWave(start, phase, fishWidth);
+      const slope = (bodyWave(end, phase, fishWidth) - offset) / slice;
+      const sourceX = cropX + i * cropWidth / strips;
+      const sourceWidth = Math.min(cropX + cropWidth - sourceX, (slice + .6) / scale);
+      const originalX = x + i * slice;
+      const screenX = facesRight ? originalX : width - originalX;
+      swimContext.setTransform(direction, slope, 0, 1, screenX, y + offset);
+      swimContext.drawImage(photo, sourceX, cropY, sourceWidth, cropHeight,
+        0, 0, sourceWidth * scale, fishHeight);
+    }
+    if (!swimFrame.isConnected) {
+      photo.after(swimFrame);
+      photo.classList.add("is-swimming");
+    }
+  }
+}
+
+function drawSwim(now){
+  const interval = 1000 / 24;
+  const elapsed = now - lastSwimDraw;
+  if (elapsed >= interval) {
+    lastSwimDraw = now - elapsed % interval;
+    for (const swimmer of swimmers) drawFish(swimmer, now);
+  }
+  swimRequest = requestAnimationFrame(drawSwim);
+}
+
+function updateSwimmer(){
+  const card = reducedMotion.matches || document.hidden ? null : cards[idx];
+  if (card === swimmingCard) return;
+  cancelAnimationFrame(swimRequest);
+  for (const {photo, swimFrame} of swimmers) {
+    photo.classList.remove("is-swimming");
+    swimFrame.remove();
+  }
+  swimmingCard = card;
+  swimmers = [];
+  card?.querySelectorAll("img.fish").forEach((photo, i) => {
+    const swimFrame = document.createElement("canvas");
+    swimFrame.className = "cut swim-frame";
+    swimFrame.setAttribute("aria-hidden", "true");
+    const swimContext = swimFrame.getContext("2d");
+    if (swimContext) swimmers.push({photo, swimFrame, swimContext, phaseOffset: i * .41});
+  });
+  if (swimmers.length) swimRequest = requestAnimationFrame(drawSwim);
+}
+reducedMotion.addEventListener("change", updateSwimmer);
+document.addEventListener("visibilitychange", () => {
+  document.documentElement.classList.toggle("paused", document.hidden);
+  updateSwimmer();
+});
+
+function relativeCard(j, selected, count){
+  let distance=(j-selected+count)%count;
+  if(distance>count/2) distance-=count;
+  return distance;
+}
+
+function layout(dx=0){
+  const spacing=(deck.clientWidth-48)*.88;
+  cards.forEach((c,j)=>{
+    const k=relativeCard(j,idx,cards.length);
+    const visible=Math.abs(k)<=1;
+    const shift=k===0 ? dx : k*spacing+dx*.2;
+    c.style.transform=`translateX(${shift}px) scale(${k===0 ? 1 : .84})`;
+    c.style.opacity=visible ? (k===0 ? "1" : ".82") : "0";
+    c.style.visibility=visible ? "visible" : "hidden";
+    c.style.zIndex=k===0 ? "3" : "1";
+    c.classList.toggle("front",k===0);
+    c.inert=k!==0;
+    if(visible && !c.dataset.photosLoaded){
+      for(const photo of c.querySelectorAll("img[data-src]")) photo.src=photo.dataset.src;
+      c.dataset.photosLoaded="true";
+    }
+  });
+  pager.innerHTML=cards.map((_,j)=>`<i class="${j===idx?'on':''}"></i>`).join("");
+  prevB.disabled=nextB.disabled=cards.length<=1;
+  updateSwimmer();
+}
+const go = n => {
+  if(!cards.length) return;
+  idx=(n%cards.length+cards.length)%cards.length;
+  layout();
+};
+addEventListener("resize",()=>layout());
+
+function show(sec){
+  const s=SECTIONS.find(x=>x.id===sec);
+  deck.classList.toggle("is-combo", sec==="combo");
+  document.getElementById("secTitle").textContent=s.ten;
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.id===sec));
+  deck.innerHTML = sec==="combo" ? COMBOS.map(comboCard).join("")
+    : ITEMS.filter(x=>x.sec===sec).map(itemCard).join("");
+  cards=[...deck.children]; idx=0; layout();
+}
+
+// kéo/vuốt thẻ trên cùng
+let sx=null, dx=0;
+deck.addEventListener("pointerdown",e=>{
+  const c=cards[idx]; if(!c || !c.contains(e.target)) return;
+  sx=e.clientX; dx=0; deck.setPointerCapture(e.pointerId);
+});
+deck.addEventListener("pointermove",e=>{
+  if(sx===null) return; dx=e.clientX-sx;
+  if(Math.abs(dx)>4){ cards[idx].classList.add("dragging"); layout(dx); }
+});
+const end=()=>{
+  if(sx===null) return; sx=null; cards[idx].classList.remove("dragging");
+  if(dx<-60) go(idx+1); else if(dx>60) go(idx-1); else layout();
+};
+deck.addEventListener("pointerup",end); deck.addEventListener("pointercancel",end);
+// bấm vào thẻ đang ló phía sau để xem tiếp
+deck.addEventListener("click",e=>{
+  if(Math.abs(dx)>=5 || !cards[idx]) return;
+  const bounds=cards[idx].getBoundingClientRect();
+  if(e.clientX<bounds.left) go(idx-1);
+  else if(e.clientX>bounds.right) go(idx+1);
+});
+prevB.onclick=()=>go(idx-1); nextB.onclick=()=>go(idx+1);
+addEventListener("keydown",e=>{ if(e.key==="ArrowRight") go(idx+1); if(e.key==="ArrowLeft") go(idx-1); });
+
+document.getElementById("tabs").innerHTML = SECTIONS.map(s=>`<button type="button" data-id="${s.id}"><span>${s.icon}</span>${s.tab}</button>`).join("");
+document.getElementById("tabs").onclick=e=>{ const b=e.target.closest("button"); if(b) show(b.dataset.id); };
+
+document.getElementById("creditList").innerHTML = CREDITS.map(([t,a,l,u])=>`<li>${t}: <a href="${u}" target="_blank" rel="noopener">${a||"Wikimedia Commons"}</a>${l ? `, ${l}` : ""}</li>`).join("")
+  + "<li>Ảnh tham chiếu từ các nguồn trên đã được tách nền. Các mục chưa có ảnh dùng hình vẽ.</li>";
+document.getElementById("creditBtn").onclick=()=>document.getElementById("credits").showModal();
+
+show("combo");
+
+/* bong bóng */
+const tank=document.querySelector(".tank");
+for(let i=0;i<5;i++){
+  const b=document.createElement("span"), d=6+Math.random()*16;
+  b.className="bubble";
+  b.style.cssText=`left:${Math.random()*100}%;width:${d}px;height:${d}px;animation-duration:${9+Math.random()*10}s;animation-delay:${-Math.random()*18}s`;
+  tank.appendChild(b);
+}
+</script>
+</body>
+</html>
